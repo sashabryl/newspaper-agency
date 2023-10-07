@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Redactor(AbstractUser):
-    years_of_experience = models.IntegerField()
+    years_of_experience = models.IntegerField(default=0)
 
     class Meta:
         ordering = ["-years_of_experience"]
@@ -15,6 +15,9 @@ class Topic(models.Model):
 
     class Meta:
         ordering = ["name"]
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Newspaper(models.Model):
@@ -28,3 +31,6 @@ class Newspaper(models.Model):
 
     class Meta:
         ordering = ["-published_date"]
+
+    def __str__(self) -> str:
+        return self.title
