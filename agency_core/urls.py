@@ -21,5 +21,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("newspaper_agency.urls", namespace="newspaper_agency"))
+    path("", include("newspaper_agency.urls", namespace="agency")),
+    path("account/", include("django.contrib.auth.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

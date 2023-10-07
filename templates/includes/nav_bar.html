@@ -1,0 +1,32 @@
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top bar">
+  <a href="#">
+    <img  class="navbar-brand logo" src="{% static 'images/logo.png' %}" alt="logo">
+    The Ruthless Truth
+  </a>
+  <div class="container-fluid">
+   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+   </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav">
+          <li class="navbar nav-item">
+            <a class="btn btn-dark" href="{% url 'agency:index' %}">Home</a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="navbar nav-item">
+              <a class="btn btn-dark" href="#">{{ user.username }}</a>
+            </li>
+            <li class="navbar nav-item">
+              <a class="btn btn-dark" href="{% url 'logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="navbar nav-item">
+              <a class="btn btn-dark" href="{% url 'login' %}">Login</a>
+            </li>
+          {% endif %}
+        </ul>
+    </div>
+  </div>
+</nav>
