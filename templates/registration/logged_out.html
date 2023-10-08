@@ -1,21 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="row">
-    <div class="col-3"><div class="box"></div></div>
-    <div class="col-6">
-      <div class="card text-center">
+    <div class="row"><div class="col-12"></div></div>
+    <div class="row bg-image"
+         style="background-image: url('/static/images/login-bg.jpg'); height: 100vh;">>
+    <div class="col-12 gy-5"></div>
+    <div class="col-4 gy-5"></div>
+    <div class="col-4 gy-5">
+      <div class="card text-center border-5 rounded-5 border-light border">
         <div class="card-header">
-          <h3 class="text-center">~~~~Bye!~~~~</h3>
+          <h3 class="text-center">Bye!</h3>
         </div>
         <div class="card-body">
-          <h3>Logged out successfully</h3>
-          <a href="{% url 'login' %}" class="btn bnt-light">Clic here to login again</a>
+         <h5>Logged out successfully, but you can always</h5>
+          <a href="{% url 'login' %}" class="btn btn-outline-success btn-lg">Come back</a>
         </div>
         <div class="card-footer text-muted">
-          Come on, it isn't that bad, old sport...
+          I understand. Go.
         </div>
       </div>
     </div>
-    <div class="col-3"><div class="box"></div></div>
+    <div class="col-4"></div>
+    <div class="col-12 gy-5"></div>
+    <div class="col-12 gy-5"></div>
+    <div class="col-12 gy-5"></div>
   </div>
+
 {% endblock %}
