@@ -28,13 +28,13 @@
             <a class="btn btn-dark" href="{% url 'agency:index' %}">Home</a>
           </li>
           <li class="navbar nav-item">
-            <a class="btn btn-dark" href="#">Newspapers</a>
+            <a class="btn btn-dark" href="{% url 'agency:newspaper-list' %}">Newspapers</a>
           </li>
           <li class="navbar nav-item">
             <a class="btn btn-dark" href="#">Redactors</a>
           </li>
           <li class="navbar nav-item">
-            <a class="btn btn-dark " href="#">Topics</a>
+            <a class="btn btn-dark " href="{% url 'agency:topic-list' %}">Topics</a>
           </li>
         </ul>
     </div>

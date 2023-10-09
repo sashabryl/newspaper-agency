@@ -2,8 +2,7 @@
 {% load crispy_forms_filters %}
 {% block content %}
   <div class="container-fluid no-scroll">
-    <div class="row bg-image"
-         style="background-image: url('/static/images/login-bg.jpg'); height: 100vh;">>
+    <div class="row">
       <div class="col-12 gy-5"></div>
       <div class="col-4 gy-5"></div>
       <div class="col-4 gy-5">
@@ -25,10 +24,8 @@
               <label for="floatingInputPassword">Password</label>
             </div>
               {% if form.errors %}
-
-                  {% for error in form.errors %}
-                    <div class="alert alert-danger">Invalid {{ error|escape }}. This field is required and may be case-sensitive.</div>
-                  {% endfor %}
+                <div class="alert alert-danger">
+                  Invalid credentials. Note that the fields may be case-sensitive.</div>
               {% endif %}
              <input type="hidden" name="next" value="{{ next }}">
              <input type="submit" class="btn btn-outline-primary btn-lg">
