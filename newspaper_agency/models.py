@@ -9,6 +9,9 @@ class Redactor(AbstractUser):
     class Meta:
         ordering = ["-years_of_experience"]
 
+    def __str__(self) -> str:
+        return f"{self.username} ({self.years_of_experience} years of experience)"
+
 
 class Topic(models.Model):
     name = models.CharField(max_length=255)
