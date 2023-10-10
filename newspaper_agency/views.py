@@ -7,7 +7,14 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from newspaper_agency.forms import NewspaperSearchForm, TopicSearchForm, NewspaperForm, RedactorSearchForm
+from newspaper_agency.forms import (
+    NewspaperSearchForm,
+    TopicSearchForm,
+    NewspaperForm,
+    RedactorSearchForm,
+    RedactorUpdateForm,
+    RedactorCreateForm
+)
 from newspaper_agency.models import Topic, Newspaper
 
 
@@ -15,11 +22,7 @@ def index(request: HttpRequest):
     newspapers = Newspaper.objects.prefetch_related("publishers")
     num_topics = Topic.objects.all().count()
     total_newspapers = newspapers.all().count()
-    recent_publications = newspapers.filter(
-        published_date__gt=(
-                datetime.date.today() - datetime.timedelta(weeks=2)
-        )
-    )
+    recent_publications = newspapers.prefetch_related("publishers").all()[:10]
     num_staff = get_user_model().objects.all().count()
     context = {
         "num_topics": num_topics,
@@ -85,8 +88,14 @@ def create_update_topic(request: HttpRequest):
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper
     form_class = NewspaperForm
-    success_url = reverse_lazy("agency:newspaper-list")
     template_name = "newspaper_agency/newspaper_form.html"
+
+    def get_success_url(self):
+        news_id = self.request.POST.get("news_id")
+        if news_id:
+            return reverse_lazy("agency:newspaper-detail", args=[news_id])
+        return reverse_lazy("agency:newspaper-list")
+
 
 
 class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
@@ -130,19 +139,42 @@ class RedactorListView(LoginRequiredMixin, generic.ListView):
 
 class RedactorCreateView(LoginRequiredMixin, generic.CreateView):
     model = get_user_model()
-    form_class = UserCreationForm
+    form_class = RedactorCreateForm
     template_name = "newspaper_agency/redactor_form.html"
-    success_url = reverse_lazy("newspaper_agency:redactor-list")
+    success_url = reverse_lazy("agency:redactor-list")
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.save()
+        form.save_m2m()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
-    form_class = UserCreationForm
-    template_name = "newspaper_agency:redactor_form.html"
+    form_class = RedactorUpdateForm
+    template_name = "newspaper_agency/redactor_form.html"
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.save()
+        form.save_m2m()
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+        red_id = self.request.POST.get("red_id")
+        if red_id:
+            return reverse_lazy("agency:redactor-detail", args=[red_id])
+        return reverse_lazy("agency:redactor-list")
 
 class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = get_user_model()
-    success_url = reverse_lazy("agency:redactor=list")
+    success_url = reverse_lazy("agency:redactor-list")
+
+
+class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
+    model = get_user_model()
+
+
+class NewspaperDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Newspaper

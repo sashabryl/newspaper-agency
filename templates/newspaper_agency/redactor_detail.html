@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container-fluid no-scroll mb-0">
+    <div class="row">
+      <div class="col-12 gy-5"></div>
+      <div class="col-1 gy-5"></div>
+      <div class="col-10 gy-5">
+        <div class="card border-5 rounded-5 border-light border">
+          <div class="card-header d-flex justify-content-between">
+            <h1>
+              {{ redactor.first_name }} {{ redactor.last_name }} | {{ redactor.username }}
+            </h1>
+            <div>
+              <a href="{% url 'agency:redactor-update' redactor.id %}?next={{ request.path|urlencode }}"
+                 class="btn btn-outline-secondary btn-lg">
+                Edit
+              </a>
+              <a href="{% url 'agency:redactor-delete' redactor.id %}"
+                class="btn btn-outline-danger btn-lg">
+                Delete
+              </a>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="fw-bold fs-5 m-5">
+              Full name: {{ redactor.first_name }} {{ redactor.last_name }}
+            </span> <br>
+            <span class="fw-bold fs-5 m-5">Years of experience: {{ redactor.years_of_experience }}</span> <br>
+            <span class="fw-bold fs-5 m-5">Email: {{ redactor.email }}</span> <br>
+            <span class="fw-bold fs-5 m-5">Date of hiring: {{ redactor.date_joined.date }}</span> <br>
+            <h4 class="m-3">
+              {{ redactor.newspapers.all|yesno:"All publications,No publications" }}
+              ({{ redactor.newspapers.all.count }})
+            </h4>
+            <ul class="list-group list-group-flush">
+            {% for newspaper in redactor.newspapers.all %}
+              <li class="list-group-item">
+                <a class="btn btn-light" href="#">{{ newspaper.title }} ({{ newspaper.published_date }})</a>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+{% endblock %}

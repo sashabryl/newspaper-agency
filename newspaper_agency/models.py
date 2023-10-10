@@ -10,7 +10,7 @@ class Redactor(AbstractUser):
         ordering = ["-years_of_experience"]
 
     def __str__(self) -> str:
-        return f"{self.username} ({self.years_of_experience} years of experience)"
+        return self.username
 
 
 class Topic(models.Model):

@@ -39,7 +39,9 @@
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{ newspaper.title }}</h6>
+                        <a class="btn btn-outline-dark" href="{% url 'agency:newspaper-detail' newspaper.id %}">
+                          {{ newspaper.title }}
+                        </a>
                       </div>
                     </div>
                   </td>
@@ -126,7 +128,7 @@
                     </span>
                   </td>
                   <td>
-                    <a href="{% url 'agency:newspaper-update' newspaper.id"
+                    <a href="{% url 'agency:newspaper-update' newspaper.id %}"
                        class="btn btn-outline-secondary">
                       Edit
                     </a>

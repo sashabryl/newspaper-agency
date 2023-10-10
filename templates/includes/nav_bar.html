@@ -14,7 +14,10 @@
       <ul class="navbar-nav">
           {% if user.is_authenticated %}
             <li class="navbar nav-item">
-              <a class="btn btn-dark" href="#">{{ user.username }}</a>
+              <a class="btn btn-dark"
+                 href="{% url 'agency:redactor-detail' user.id %}">
+                {{ user.username }}
+              </a>
             </li>
             <li class="navbar nav-item">
               <a class="btn btn-dark" href="{% url 'logout' %}">Logout</a>
@@ -31,7 +34,7 @@
             <a class="btn btn-dark" href="{% url 'agency:newspaper-list' %}">Newspapers</a>
           </li>
           <li class="navbar nav-item">
-            <a class="btn btn-dark" href="#">Redactors</a>
+            <a class="btn btn-dark" href="{% url 'agency:redactor-list' %}">Redactors</a>
           </li>
           <li class="navbar nav-item">
             <a class="btn btn-dark " href="{% url 'agency:topic-list' %}">Topics</a>
