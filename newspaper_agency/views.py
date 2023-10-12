@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
@@ -18,6 +19,7 @@ from newspaper_agency.forms import (
 from newspaper_agency.models import Topic, Newspaper
 
 
+@login_required()
 def index(request: HttpRequest):
     newspapers = Newspaper.objects.prefetch_related("publishers")
     num_topics = Topic.objects.all().count()
@@ -78,11 +80,18 @@ class TopicDetailView(LoginRequiredMixin, generic.DetailView):
     model = Topic
 
 
+@login_required()
 def create_update_topic(request: HttpRequest):
     data = request.POST
     if not data.get("name_update"):
-        Topic.objects.create(name=request.POST.get("name_create"))
-    else:
+        if not Topic.objects.filter(
+                name=request.POST.get("name_create")
+        ).exists():
+            Topic.objects.create(name=request.POST.get("name_create"))
+
+    elif not Topic.objects.filter(
+                name=request.POST.get("name_update")
+    ).exists():
         topic = Topic.objects.get(id=data.get("topic_id"))
         topic.name = data.get("name_update")
         topic.save()
@@ -175,4 +184,3 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
     model = get_user_model()
-

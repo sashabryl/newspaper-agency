@@ -6,9 +6,18 @@ from newspaper_agency.views import (
     TopicListView,
     NewspaperUpdateView,
     NewspaperCreateView,
-    create_update_topic, NewspaperDeleteView, TopicDeleteView, RedactorDeleteView, RedactorUpdateView,
-    RedactorCreateView, RedactorListView, RedactorDetailView, NewspaperDetailView, TopicDetailView,
+    create_update_topic,
+    NewspaperDeleteView,
+    TopicDeleteView,
+    RedactorDeleteView,
+    RedactorUpdateView,
+    RedactorCreateView,
+    RedactorListView,
+    RedactorDetailView,
+    NewspaperDetailView,
+    TopicDetailView,
 )
+
 
 urlpatterns = [
     path("", index, name="index"),
