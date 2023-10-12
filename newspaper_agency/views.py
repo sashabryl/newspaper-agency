@@ -30,7 +30,7 @@ def index(request: HttpRequest):
         "num_topics": num_topics,
         "recent_publications": recent_publications,
         "total_newspapers": total_newspapers,
-        "num_staff": num_staff
+        "num_staff": num_staff,
     }
     return render(request, "newspaper_agency/index.html", context=context)
 
@@ -85,17 +85,17 @@ def create_update_topic(request: HttpRequest):
     data = request.POST
     if not data.get("name_update"):
         if not Topic.objects.filter(
-                name=request.POST.get("name_create")
+            name=request.POST.get("name_create")
         ).exists():
             Topic.objects.create(name=request.POST.get("name_create"))
 
     elif not Topic.objects.filter(
-                name=request.POST.get("name_update")
+        name=request.POST.get("name_update")
     ).exists():
         topic = Topic.objects.get(id=data.get("topic_id"))
         topic.name = data.get("name_update")
         topic.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -107,12 +107,12 @@ class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper
     form_class = NewspaperForm
     template_name = "newspaper_agency/newspaper_form.html"
-    
+
     def form_valid(self, form):
         print(form.data)
         super().form_valid(form)
         return HttpResponseRedirect(self.get_success_url())
-    
+
     def get_success_url(self):
         news_id = self.request.POST.get("news_id")
         if news_id:

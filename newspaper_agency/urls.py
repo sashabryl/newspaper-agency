@@ -26,63 +26,55 @@ urlpatterns = [
     path(
         "newspapers/<int:pk>/update/",
         NewspaperUpdateView.as_view(),
-        name="newspaper-update"
+        name="newspaper-update",
     ),
     path(
         "newspapers/create/",
         NewspaperCreateView.as_view(),
-        name="newspaper-create"
+        name="newspaper-create",
     ),
     path(
         "topics/create-update/",
         create_update_topic,
-        name="topic-create-update"
+        name="topic-create-update",
     ),
     path(
         "newspapers/<int:pk>/delete/",
         NewspaperDeleteView.as_view(),
-        name="newspaper-delete"
+        name="newspaper-delete",
     ),
     path(
         "topics/<int:pk>/delete/",
         TopicDeleteView.as_view(),
-        name="topic-delete"
+        name="topic-delete",
     ),
-    path(
-        "redactors/",
-        RedactorListView.as_view(),
-        name="redactor-list"
-    ),
+    path("redactors/", RedactorListView.as_view(), name="redactor-list"),
     path(
         "redactors/create/",
         RedactorCreateView.as_view(),
-        name="redactor-create"
+        name="redactor-create",
     ),
     path(
         "redactors/<int:pk>/delete/",
         RedactorDeleteView.as_view(),
-        name="redactor-delete"
+        name="redactor-delete",
     ),
     path(
         "redactors/<int:pk>/update/",
         RedactorUpdateView.as_view(),
-        name="redactor-update"
+        name="redactor-update",
     ),
     path(
         "redactors/<int:pk>/",
         RedactorDetailView.as_view(),
-        name="redactor-detail"
+        name="redactor-detail",
     ),
     path(
         "newspapers/<int:pk>/",
         NewspaperDetailView.as_view(),
-        name="newspaper-detail"
+        name="newspaper-detail",
     ),
-    path(
-        "topics/<int:pk>/",
-        TopicDetailView.as_view(),
-        name="topic-detail"
-    )
+    path("topics/<int:pk>/", TopicDetailView.as_view(), name="topic-detail"),
 ]
 
 app_name = "agency"

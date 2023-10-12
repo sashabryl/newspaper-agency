@@ -6,7 +6,6 @@ from newspaper_agency.models import Topic, Newspaper
 
 
 class PublicNewspaperViewsTest(TestCase):
-
     def setUp(self) -> None:
         self.newspaper = Newspaper.objects.create(
             title="newzpaper", content="contend"
@@ -34,7 +33,6 @@ class PublicNewspaperViewsTest(TestCase):
 
 
 class PublicRedactorViewsTest(TestCase):
-
     def setUp(self) -> None:
         self.redactor = get_user_model().objects.create(
             username="luckyman", password="feiawfh#!@32"
@@ -62,10 +60,8 @@ class PublicRedactorViewsTest(TestCase):
 
 
 class PublicTopicViewsTest(TestCase):
-
     def setUp(self) -> None:
         self.topic = Topic.objects.create(name="Art")
-
 
     def test_login_required_protection_list(self):
         url = reverse("agency:topic-list")
@@ -91,7 +87,8 @@ class PublicTopicViewsTest(TestCase):
 class TestCreateUpdateTopic(TestCase):
     def setUp(self) -> None:
         self.user = get_user_model().objects.create(
-            username="tester", password="29fjaeoiwf@")
+            username="tester", password="29fjaeoiwf@"
+        )
         self.topic = Topic.objects.create(name="Art")
         self.client.force_login(self.user)
 
@@ -100,9 +97,10 @@ class TestCreateUpdateTopic(TestCase):
         self.client.post(url, data={"name_create": "Tourism"})
         self.assertTrue(Topic.objects.filter(name="Tourism").exists())
         self.client.post(
-            url, data={
+            url,
+            data={
                 "name_update": "Love",
                 "topic_id": 1,
-            }
+            },
         )
         self.assertTrue(Topic.objects.filter(name="Love").exists())

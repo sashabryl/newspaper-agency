@@ -5,7 +5,8 @@ from django.urls import reverse
 from newspaper_agency.forms import (
     TopicSearchForm,
     NewspaperSearchForm,
-    RedactorSearchForm, NewspaperForm,
+    RedactorSearchForm,
+    NewspaperForm,
 )
 from newspaper_agency.models import Topic, Newspaper
 
@@ -40,8 +41,12 @@ class NewspaperFormTest(TestCase):
         form = NewspaperForm(
             data={
                 "title": "test_paper",
-                "topics": [1, ],
-                "publishers": [1, ],
+                "topics": [
+                    1,
+                ],
+                "publishers": [
+                    1,
+                ],
                 "content": "some",
             }
         )
@@ -54,8 +59,13 @@ class NewspaperFormTest(TestCase):
         form = NewspaperForm(
             data={
                 "title": "updated_paper",
-                "topics": [1, ],
-                "publishers": [1, 2, ],
+                "topics": [
+                    1,
+                ],
+                "publishers": [
+                    1,
+                    2,
+                ],
                 "content": "some",
             }
         )
@@ -70,7 +80,6 @@ class NewspaperFormTest(TestCase):
 
 
 class SearchFormsTest(TestCase):
-
     def test_topic_searchform_config(self):
         form = TopicSearchForm(data={"name": "a"})
         self.assertTrue(form.is_valid())

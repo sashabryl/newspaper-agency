@@ -50,7 +50,7 @@ class RedactorCreateForm(UserCreationForm):
     newspapers = forms.ModelMultipleChoiceField(
         queryset=Newspaper.objects.prefetch_related("publishers").all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
     )
     years_of_experience = forms.IntegerField(
         min_value=0, max_value=100, initial=0
@@ -79,9 +79,11 @@ class RedactorUpdateForm(forms.ModelForm):
     newspapers = forms.ModelMultipleChoiceField(
         queryset=Newspaper.objects.prefetch_related("publishers").all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
     )
-    years_of_experience = forms.IntegerField(min_value=0, max_value=100, initial=0)
+    years_of_experience = forms.IntegerField(
+        min_value=0, max_value=100, initial=0
+    )
 
     class Meta:
         model = get_user_model()
@@ -102,4 +104,3 @@ class RedactorUpdateForm(forms.ModelForm):
         instance = super().save(*args, **kwargs)
         instance.newspapers.set(self.cleaned_data["newspapers"])
         return instance
-

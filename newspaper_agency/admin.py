@@ -11,7 +11,7 @@ admin.site.register(Topic)
 
 @admin.register(get_user_model())
 class RedactorAdmin(UserAdmin):
-    list_display = UserAdmin.list_display + ("years_of_experience", )
+    list_display = UserAdmin.list_display + ("years_of_experience",)
     fieldsets = UserAdmin.fieldsets + (
         (("Additional info", {"fields": ("years_of_experience",)}),)
     )
@@ -33,5 +33,8 @@ class RedactorAdmin(UserAdmin):
 
 @admin.register(Newspaper)
 class NewspaperAdmin(admin.ModelAdmin):
-    list_display = ("title", "published_date", )
-    search_fields = ("title", )
+    list_display = (
+        "title",
+        "published_date",
+    )
+    search_fields = ("title",)

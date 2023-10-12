@@ -22,7 +22,7 @@ from django.urls import path, include
 from newspaper_agency.views import NewspaperUpdateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("", include("newspaper_agency.urls", namespace="agency")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
