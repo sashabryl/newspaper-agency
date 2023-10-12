@@ -13,7 +13,7 @@ from newspaper_agency.forms import (
     NewspaperForm,
     RedactorSearchForm,
     RedactorUpdateForm,
-    RedactorCreateForm
+    RedactorCreateForm,
 )
 from newspaper_agency.models import Topic, Newspaper
 
@@ -74,6 +74,10 @@ class TopicListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
+class TopicDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Topic
+
+
 def create_update_topic(request: HttpRequest):
     data = request.POST
     if not data.get("name_update"):
@@ -85,17 +89,26 @@ def create_update_topic(request: HttpRequest):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Topic
+    success_url = reverse_lazy("agency:topic-list")
+
+
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper
     form_class = NewspaperForm
     template_name = "newspaper_agency/newspaper_form.html"
-
+    
+    def form_valid(self, form):
+        print(form.data)
+        super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
+    
     def get_success_url(self):
         news_id = self.request.POST.get("news_id")
         if news_id:
             return reverse_lazy("agency:newspaper-detail", args=[news_id])
         return reverse_lazy("agency:newspaper-list")
-
 
 
 class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
@@ -110,9 +123,8 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("agency:newspaper-list")
 
 
-class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
-    model = Topic
-    success_url = reverse_lazy("agency:topic-list")
+class NewspaperDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Newspaper
 
 
 class RedactorListView(LoginRequiredMixin, generic.ListView):
@@ -143,29 +155,18 @@ class RedactorCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "newspaper_agency/redactor_form.html"
     success_url = reverse_lazy("agency:redactor-list")
 
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.save()
-        form.save_m2m()
-        return HttpResponseRedirect(self.get_success_url())
-
 
 class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
     form_class = RedactorUpdateForm
     template_name = "newspaper_agency/redactor_form.html"
 
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.save()
-        form.save_m2m()
-        return HttpResponseRedirect(self.get_success_url())
-
     def get_success_url(self):
         red_id = self.request.POST.get("red_id")
         if red_id:
             return reverse_lazy("agency:redactor-detail", args=[red_id])
         return reverse_lazy("agency:redactor-list")
+
 
 class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = get_user_model()
@@ -175,6 +176,3 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
 class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
     model = get_user_model()
 
-
-class NewspaperDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Newspaper

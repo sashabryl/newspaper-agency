@@ -11,10 +11,10 @@
     </form>
   <div class="row">
     <div class="col-12" style="height: 90vh;">
-      <div class="card mb-4 rounded border">
+      <div class="card mb-4 rounded border border-2 border-danger">
         <div class="card-header pb-0">
           <h3 class="text-center">
-            {% if topic_list %}Topic ({{ num_found }} found)
+            {% if topic_list %}Topics ({{ num_found }} found)
             {% else %}No topics{% endif %}
             <button type="button" class="btn btn-outline-success"
                     data-bs-toggle="modal" data-bs-target="#createModal">
@@ -24,11 +24,14 @@
         </div>
         <div class="card-body p-0">
           <div class="table-responsive p-0">
-            <table class="table align-items-center table-hover p-0">
-              <thead class="border border-dark border-1">
+            <table class="table align-items-center table-hover p-0 border border-danger">
+              <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Newspapers</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">publications</th>
+                  <th class="text-secondary opacity-7">Edit</th>
+                  <th class="text-secondary opacity-7">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,7 +62,10 @@
                           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             {% for newspaper in topic.newspapers.all %}
                               <li>
-                                <a class="dropdown-item" href="#">
+                                <a
+                                  class="dropdown-item"
+                                  href="{% url 'agency:newspaper-detail' newspaper.id %}"
+                                >
                                 {{ newspaper }} ({{ newspaper.published_date }})
                               </a>
                               </li>
@@ -69,42 +75,48 @@
                       </div>
                     {% endif %}
                   </td>
-                <td>
-                  <button type="button" class="btn btn-outline-secondary"
-                    data-bs-toggle="modal" data-bs-target="#editModal{{ topic.id }}">
-                    Edit
-                  </button>
-                    <div class="modal" id="editModal{{ topic.id }}" tabindex="-1">
-                      <div class="modal-dialog modal-dialog-center">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="modal-title text-center">Edit {{ topic }}</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="{% url 'agency:topic-create-update' %}" method="post">
-                              {% csrf_token %}
-                              <div class="form-floating m-3">
-                                <input type="text" maxlength="255" class="form-control" id="floatingInputName{{ topic.id }}"
-                                 placeholder="Name" name="name_update" required>
-                                <label for="floatingInputName{{ topic.id }}">Name</label>
-                              </div>
-                              <input type="hidden" value="{{ topic.id }}" name="topic_id">
-                              <input type="submit" value="Edit" class="btn btn-outline-primary mr-5">
-                              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                            </form>
+                  <td>
+                    <a href="{% url 'agency:topic-detail' topic.id %}"
+                       class="btn btn-outline-primary">
+                      All newspapers
+                    </a>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-outline-secondary"
+                      data-bs-toggle="modal" data-bs-target="#editModal{{ topic.id }}">
+                      Edit
+                    </button>
+                      <div class="modal" id="editModal{{ topic.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-center">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title text-center">Edit {{ topic }}</h4>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="{% url 'agency:topic-create-update' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-floating m-3">
+                                  <input type="text" maxlength="255" class="form-control" id="floatingInputName{{ topic.id }}"
+                                   placeholder="Name" name="name_update" required>
+                                  <label for="floatingInputName{{ topic.id }}">Name</label>
+                                </div>
+                                <input type="hidden" value="{{ topic.id }}" name="topic_id">
+                                <input type="submit" value="Edit" class="btn btn-outline-primary mr-5">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                              </form>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                </td>
-                <td>
-                  <a href="{% url 'agency:topic-delete' topic.id %}"
-                     class="btn btn-outline-danger">
-                    Delete
-                  </a>
-                </td>
-
+                  </td>
+                  <td>
+                    <a href="{% url 'agency:topic-delete' topic.id %}"
+                       class="btn btn-outline-danger">
+                      Delete
+                    </a>
+                  </td>
+                </tr>
               {% endfor %}
               </tbody>
               <tfoot class="pb-0">

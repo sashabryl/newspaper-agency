@@ -11,10 +11,10 @@
                 </form>
   <div class="row">
     <div class="col-12">
-      <div class="card mb-4 rounded-5">
+      <div class="card mb-4 rounded-5 border border-danger border-2">
         <div class="card-header pb-0">
           <h3 class="text-center">
-            {% if newspaper_list %}Newspapers table ({{ num_found }} found)
+            {% if newspaper_list %}Newspapers ({{ num_found }} found)
             {% else %}No publications{% endif %}
             <a href="{% url 'agency:newspaper-create' %}" class="btn btn-outline-success">Add</a>
 
@@ -22,15 +22,16 @@
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
-            <table class="table align-items-center table-hover pb-0">
+            <table class="table align-items-center table-hover pb-0 table-border border-danger">
               <thead>
-                <tr class="border border-bottom border-1 border-dark">
+                <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">redactors</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">content</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">topics</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">date of publication</th>
-                  <th class="text-secondary opacity-7"></th>
+                  <th class="text-secondary opacity-7">Edit</th>
+                  <th class="text-secondary opacity-7">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -47,9 +48,12 @@
                   </td>
                   <td>
                     {% if newspaper.publishers.all.count == 1 %}
-                      <a href="#" class="btn btn-light border border-dark rounded-5">
+                      <a href="{% url 'agency:redactor-detail' newspaper.publishers.first.id %}"
+                         class="btn btn-light border border-dark rounded-5">
                         {{ newspaper.publishers.first.username }}
                       </a>
+                    {% elif not newspaper.publishers.all %}
+                      <h6>No redactors</h6>
                     {% else %}
                       <div class="btn-group dropup">
                         <div class="dropdown dropdown">
@@ -60,9 +64,12 @@
                           </button>
                           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             {% for redactor in newspaper.publishers.all %}
-                              <li><a class="dropdown-item" href="#">{{ redactor.username }}</a></li>
-                            {% empty %}
-                              <li><a class="h5" href="#">No redactor</a></li>
+                              <li>
+                                <a class="dropdown-item dropdown-link"
+                                   href="{% url 'agency:redactor-detail' redactor.id %}">
+                                  {{ redactor.username }}
+                                </a>
+                              </li>
                             {% endfor %}
                           </ul>
                         </div>
@@ -102,7 +109,12 @@
                   </td>
                   <td class="align-middle text-center text-sm">
                     {% if newspaper.topics.all.count == 1 %}
-                      <a href="#" class="btn btn-light border border-dark rounded-5">{{ newspaper.topics.first }}</a>
+                      <a href="{% url 'agency:topic-detail' newspaper.topics.first.id %}"
+                       class="btn btn-light border border-dark rounded-5">
+                        {{ newspaper.topics.first }}
+                      </a>
+                    {% elif not newspaper.topics.all %}
+                      <h6>No topics</h6>
                     {% else %}
                     <div class="btn-group dropup">
                       <div class="dropdown">
@@ -113,9 +125,11 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                           {% for topic in newspaper.topics.all %}
-                            <li><a class="dropdown-item" href="#">{{ topic }}</a></li>
-                          {% empty %}
-                            <li><a class="h5" href="#">No topic</a></li>
+                            <li>
+                              <a class="dropdown-item" href="{% url 'agency:topic-detail' topic.id %}">
+                              {{ topic }}
+                            </a>
+                            </li>
                           {% endfor %}
                         </ul>
                       </div>

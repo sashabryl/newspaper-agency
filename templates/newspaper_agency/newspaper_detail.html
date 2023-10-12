@@ -6,9 +6,9 @@
       <div class="col-1 gy-5"></div>
       <div class="col-10 gy-5">
         <div class="card border-5 rounded-5 border-light border">
-          <div class="card-header d-flex justify-content-between">
+          <div class="card-header d-flex justify-content-between bg-light">
             <h1>
-              {{ newspaper.title }}
+              | {{ newspaper.title }}
             </h1>
             <div>
               <a href="{% url 'agency:newspaper-update' newspaper.id %}?next={{ request.path|urlencode }}"
@@ -26,10 +26,10 @@
               Date of publication: {{ newspaper.published_date }}
             </h5>
             <div class="row">
-              <div class="col-6">
-                <h4 class="m-3">
+              <div class="col-6 text-center">
+                <h4 class="m-3 bg-primary bg-gradient text-light pt-2 pb-2 rounded-pill">
                   {{ newspaper.publishers.all|yesno:"All redactors,No editors did this paper" }}
-                  ({{ newspaper.publishers.all.count }})
+                  <span class="fw-lighter">| {{ newspaper.publishers.all.count }} found</span>
                 </h4>
                 <ul class="list-group list-group-flush">
               {% for publisher in newspaper.publishers.all %}
@@ -39,28 +39,25 @@
               {% endfor %}
                 </ul>
               </div>
-              <div class="col-6">
-                <h4 class="m-3">
-                  {{ newspaper.publishers.all|yesno:"All redactors,No editors did this paper" }}
-                  ({{ newspaper.publishers.all.count }})
+              <div class="col-6 text-center">
+                <h4 class="m-3 bg-danger bg-gradient text-light pt-2 pb-2 rounded-pill">
+                  {{ newspaper.topics.all|yesno:"Topics,No topics" }}
+                  <span class="fw-lighter">| {{ newspaper.topics.all.count }} found</span>
                 </h4>
                 <ul class="list-group list-group-flush">
               {% for topic in newspaper.topics.all %}
                 <li class="list-group-item">
-                  <span class="btn btn-light">{{ topic }}</span>
+                  <a href="{% url 'agency:topic-detail' topic.id %}"
+                     class="btn btn-light">
+                    {{ topic }}
+                  </a>
                 </li>
               {% endfor %}
                 </ul>
               </div>
             </div>
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <h3 class="text-center m-5">Content</h3>
-                <p>{{ newspaper.content }}</p>
-              </div>
-              <div class="col-1"></div>
-            </div>
+            <h3 class="text-center m-5 pt-5 border-top border-4">Content</h3>
+            <p class="fs-5">{{ newspaper.content }}</p>
           </div>
         </div>
       </div>

@@ -11,26 +11,24 @@
   </form>
   <div class="row">
     <div class="col-12">
-      <div class="card mb-4 rounded-5">
+      <div class="card mb-4 rounded-5 border border-danger border-2 text-center">
         <div class="card-header pb-0">
           <h3 class="text-center">
-            {% if redactor_list %}Redactors table ({{ num_found }} found)
-            {% else %}No publications{% endif %}
+            {% if redactor_list %}Redactors({{ num_found }} found)
+            {% else %}No staff at all!{% endif %}
             <a href="{% url 'agency:redactor-create' %}" class="btn btn-outline-success">Add</a>
-
           </h3>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
-            <table class="table align-items-center table-hover pb-0">
+            <table class="table align-items-center table-hover pb-0 border border-danger">
               <thead>
-                <tr class="border border-bottom border-1 border-dark">
+                <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Username</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Full name</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Years of experience</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Newspapers</th>
-                  <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
               <tbody>
@@ -39,12 +37,15 @@
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
-                        <h5 class="mb-0 fs-4">{{ redactor.username }}</h5>
+                        <a href="{% url 'agency:redactor-detail' redactor.id %}"
+                           class="btn btn-outline-dark">
+                          {{ redactor.username }}
+                        </a>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <h5 class="font-weight-bolder">{{ redactor.first_name }} {{ redactor.last_name }}</h5>
+                    <h5>{{ redactor.first_name }} {{ redactor.last_name }}</h5>
                   </td>
                   <td>
                    <span class="fw-bold">{{ redactor.years_of_experience }}</span>
@@ -54,7 +55,8 @@
                   </td>
                   <td class="align-middle text-center text-sm">
                     {% if redactor.newspapers.all.count == 1 %}
-                      <a href="#" class="btn btn-light border border-dark rounded-5">
+                      <a href="{% url 'agency:newspaper-detail' redactor.newspapers.first.id %}"
+                         class="btn btn-light border border-dark rounded-5">
                         {{ redactor.newspapers.first }}
                       </a>
                     {% elif not redactor.newspapers.all %}
@@ -70,7 +72,8 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                           {% for newspaper in redactor.newspapers.all %}
                             <li>
-                              <a class="dropdown-item" href="#">
+                              <a class="dropdown-item"
+                                 href="{% url 'agency:newspaper-detail' newspaper.id %}">
                                 {{ newspaper }} ({{ newspaper.published_date }})
                               </a>
                             </li>
@@ -79,12 +82,6 @@
                       </div>
                     </div>
                     {% endif %}
-                  </td>
-                  <td>
-                    <a href="{% url 'agency:redactor-detail' redactor.id %}"
-                       class="btn btn-outline-danger">
-                      Profile
-                    </a>
                   </td>
                 </tr>
               {% endfor %}

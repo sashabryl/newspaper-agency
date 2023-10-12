@@ -38,6 +38,7 @@ class NewspaperForm(forms.ModelForm):
     topics = forms.ModelMultipleChoiceField(
         queryset=Topic.objects.all(),
         widget=forms.CheckboxSelectMultiple,
+        required=False,
     )
 
     class Meta:
@@ -47,11 +48,13 @@ class NewspaperForm(forms.ModelForm):
 
 class RedactorCreateForm(UserCreationForm):
     newspapers = forms.ModelMultipleChoiceField(
-        queryset=Newspaper.objects.all(),
+        queryset=Newspaper.objects.prefetch_related("publishers").all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    years_of_experience = forms.IntegerField(max_value=100, initial=0)
+    years_of_experience = forms.IntegerField(
+        min_value=0, max_value=100, initial=0
+    )
 
     class Meta:
         model = get_user_model()
@@ -66,6 +69,11 @@ class RedactorCreateForm(UserCreationForm):
             "newspapers",
         )
 
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+        instance.newspapers.set(self.cleaned_data["newspapers"])
+        return instance
+
 
 class RedactorUpdateForm(forms.ModelForm):
     newspapers = forms.ModelMultipleChoiceField(
@@ -73,7 +81,7 @@ class RedactorUpdateForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    years_of_experience = forms.IntegerField(max_value=100, initial=0)
+    years_of_experience = forms.IntegerField(min_value=0, max_value=100, initial=0)
 
     class Meta:
         model = get_user_model()
@@ -85,3 +93,13 @@ class RedactorUpdateForm(forms.ModelForm):
             "email",
             "newspapers",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["newspapers"].initial = self.instance.newspapers.all()
+
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+        instance.newspapers.set(self.cleaned_data["newspapers"])
+        return instance
+
