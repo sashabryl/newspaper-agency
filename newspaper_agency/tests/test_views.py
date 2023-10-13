@@ -21,13 +21,8 @@ class PublicNewspaperViewsTest(TestCase):
             title="newzpaper", content="contend"
         )
 
-    def test_login_required_protection_list(self):
-        url = reverse("agency:newspaper-list")
-        res = self.client.get(url)
-        self.assertNotEquals(res.status_code, 200)
-
-    def test_login_required_protection_detail(self):
-        url = reverse("agency:newspaper-detail", args=[1])
+    def test_login_required_protection_create(self):
+        url = reverse("agency:newspaper-create")
         res = self.client.get(url)
         self.assertNotEquals(res.status_code, 200)
 
@@ -92,13 +87,8 @@ class PublicRedactorViewsTest(TestCase):
             username="luckyman", password="feiawfh#!@32"
         )
 
-    def test_login_required_protection_list(self):
-        url = reverse("agency:redactor-list")
-        res = self.client.get(url)
-        self.assertNotEquals(res.status_code, 200)
-
-    def test_login_required_protection_detail(self):
-        url = reverse("agency:redactor-detail", args=[1])
+    def test_login_required_protection_create(self):
+        url = reverse("agency:redactor-create")
         res = self.client.get(url)
         self.assertNotEquals(res.status_code, 200)
 
@@ -165,15 +155,11 @@ class PublicTopicViewsTest(TestCase):
     def setUp(self) -> None:
         self.topic = Topic.objects.create(name="Art")
 
-    def test_login_required_protection_list(self):
-        url = reverse("agency:topic-list")
+    def test_login_required_protection_create(self):
+        url = reverse("agency:topic-create")
         res = self.client.get(url)
         self.assertNotEquals(res.status_code, 200)
 
-    def test_login_required_protection_detail(self):
-        url = reverse("agency:topic-detail", args=[1])
-        res = self.client.get(url)
-        self.assertNotEquals(res.status_code, 200)
 
     def test_login_required_protection_update(self):
         url = reverse("agency:topic-update", args=[1])

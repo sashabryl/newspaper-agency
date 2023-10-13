@@ -19,7 +19,6 @@ from newspaper_agency.forms import (
 from newspaper_agency.models import Topic, Newspaper
 
 
-@login_required()
 def index(request: HttpRequest):
     newspapers = Newspaper.objects.prefetch_related("publishers")
     num_topics = Topic.objects.count()
@@ -35,7 +34,7 @@ def index(request: HttpRequest):
     return render(request, "newspaper_agency/index.html", context=context)
 
 
-class NewspaperListView(LoginRequiredMixin, generic.ListView):
+class NewspaperListView(generic.ListView):
     model = Newspaper
     paginate_by = 8
     template_name = "newspaper_agency/newspaper_list.html"
@@ -55,7 +54,7 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class TopicListView(LoginRequiredMixin, generic.ListView):
+class TopicListView(generic.ListView):
     model = Topic
     paginate_by = 8
 
@@ -74,7 +73,7 @@ class TopicListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class TopicDetailView(LoginRequiredMixin, generic.DetailView):
+class TopicDetailView(generic.DetailView):
     model = Topic
 
 
@@ -126,11 +125,11 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("agency:newspaper-list")
 
 
-class NewspaperDetailView(LoginRequiredMixin, generic.DetailView):
+class NewspaperDetailView(generic.DetailView):
     model = Newspaper
 
 
-class RedactorListView(LoginRequiredMixin, generic.ListView):
+class RedactorListView(generic.ListView):
     model = get_user_model()
     paginate_by = 8
 
@@ -176,5 +175,5 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("agency:redactor-list")
 
 
-class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
+class RedactorDetailView(generic.DetailView):
     model = get_user_model()
