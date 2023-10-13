@@ -4,19 +4,19 @@
   <div class="container-fluid no-scroll mb-0">
     <div class="row">
       <div class="col-12 gy-5"></div>
-      <div class="col-2 gy-5"></div>
-      <div class="col-8 gy-5">
+      <div class="col-4 gy-5"></div>
+      <div class="col-4 gy-5">
         <div class="card border-5 rounded-5 border-light border">
           <div class="card-header">
-            <h3 class="text-center">{{ object|yesno:"Edit,Add a new redactor" }} {{ object }}</h3>
+            <h3 class="text-center">{{ object|yesno:"Edit,Add a topic" }} {{ object }}</h3>
           </div>
           <div class="card-body">
            <form action="" method="post" novalidate>
              {% csrf_token %}
              {{ form|crispy }}
-             <input type="submit" class="btn btn-outline-primary btn-lg" value="Submit">
-             <input type="hidden" value="{{ object.id }}" name="red_id">
-             <a href="{% url 'agency:redactor-list' %}" class="ml-5 btn btn-lg btn-outline-secondary">
+             <input type="hidden" value="{{ object.id }}" name="news_id">
+             <input type="submit" class="btn btn-outline-primary btn-lg">
+             <a href="{% url 'agency:topic-list' %}" class="ml-5 btn btn-lg btn-outline-secondary">
                Cancel
              </a>
           </form>
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2"></div>
+      <div class="col-4"></div>
       <div class="col-12 gy-5"></div>
       <div class="col-12 gy-5"></div>
       <div class="col-12 gy-5"></div>

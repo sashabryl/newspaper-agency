@@ -6,7 +6,6 @@ from newspaper_agency.views import (
     TopicListView,
     NewspaperUpdateView,
     NewspaperCreateView,
-    create_update_topic,
     NewspaperDeleteView,
     TopicDeleteView,
     RedactorDeleteView,
@@ -15,7 +14,7 @@ from newspaper_agency.views import (
     RedactorListView,
     RedactorDetailView,
     NewspaperDetailView,
-    TopicDetailView,
+    TopicDetailView, TopicCreateView, TopicUpdateView,
 )
 
 
@@ -34,9 +33,14 @@ urlpatterns = [
         name="newspaper-create",
     ),
     path(
-        "topics/create-update/",
-        create_update_topic,
-        name="topic-create-update",
+        "topics/create/",
+        TopicCreateView.as_view(),
+        name="topic-create",
+    ),
+    path(
+        "topics/update/<int:pk>/",
+        TopicUpdateView.as_view(),
+        name="topic-update",
     ),
     path(
         "newspapers/<int:pk>/delete/",

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import generic
 
 from newspaper_agency.forms import (
@@ -22,10 +22,10 @@ from newspaper_agency.models import Topic, Newspaper
 @login_required()
 def index(request: HttpRequest):
     newspapers = Newspaper.objects.prefetch_related("publishers")
-    num_topics = Topic.objects.all().count()
-    total_newspapers = newspapers.all().count()
-    recent_publications = newspapers.prefetch_related("publishers").all()[:10]
-    num_staff = get_user_model().objects.all().count()
+    num_topics = Topic.objects.count()
+    total_newspapers = newspapers.count()
+    recent_publications = newspapers.prefetch_related("publishers")[:10]
+    num_staff = get_user_model().objects.count()
     context = {
         "num_topics": num_topics,
         "recent_publications": recent_publications,
@@ -49,7 +49,6 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         queryset = Newspaper.objects.prefetch_related("publishers")
-
         title = self.request.GET.get("title")
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -69,7 +68,6 @@ class TopicListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         queryset = Topic.objects.prefetch_related("newspapers")
-
         name = self.request.GET.get("name")
         if name:
             queryset = queryset.filter(name__icontains=name)
@@ -80,22 +78,23 @@ class TopicDetailView(LoginRequiredMixin, generic.DetailView):
     model = Topic
 
 
-@login_required()
-def create_update_topic(request: HttpRequest):
-    data = request.POST
-    if not data.get("name_update"):
-        if not Topic.objects.filter(
-            name=request.POST.get("name_create")
-        ).exists():
-            Topic.objects.create(name=request.POST.get("name_create"))
+class TopicCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Topic
+    fields = ("name", )
+    success_url = reverse_lazy("agency:topic-list")
+    template_name = "newspaper_agency/topic_form.html"
 
-    elif not Topic.objects.filter(
-        name=request.POST.get("name_update")
-    ).exists():
-        topic = Topic.objects.get(id=data.get("topic_id"))
-        topic.name = data.get("name_update")
-        topic.save()
-    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+class TopicUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Topic
+    fields = ("name", )
+    template_name = "newspaper_agency/topic_form.html"
+
+    def get_success_url(self):
+        topic_id = self.request.POST.get("topic_id")
+        if topic_id:
+            return reverse_lazy("agency:topic-detail", args=[topic_id])
+        return reverse_lazy("agency:topic-list")
 
 
 class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -107,11 +106,6 @@ class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper
     form_class = NewspaperForm
     template_name = "newspaper_agency/newspaper_form.html"
-
-    def form_valid(self, form):
-        print(form.data)
-        super().form_valid(form)
-        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         news_id = self.request.POST.get("news_id")

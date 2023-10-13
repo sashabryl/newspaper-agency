@@ -5,8 +5,11 @@
       <div class="col-12 gy-5"></div>
       <div class="col-1 gy-5"></div>
       <div class="col-10 gy-5">
-        <div class="card border-5 rounded-5 border-light border text-center">
-          <div class="card-header bg-success bg-gradient">
+        <div class="card border-5 rounded-5 border-light border text-end">
+          <div class="card-header bg-dark bg-gradient d-flex justify-content-between">
+            <button onclick="history.back()" class="btn btn-primary btn-lg">Go back</button>
+            <a href="{% url 'agency:topic-update' topic.id %}" class="btn btn-info btn-lg">Rename</a>
+            <a href="{% url 'agency:topic-delete' topic.id %}" class="btn btn-danger btn-lg">Delete</a>
             <h1 class="text-light">
               Newspapers on {{ topic }} |
               <span class="fw-lighter">{{ topic.newspapers.all.count }} found</span>
