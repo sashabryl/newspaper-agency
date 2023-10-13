@@ -1,5 +1,6 @@
 # Newspaper Agency
-An app for tracking the publications of a newspaper agency.
+An app for tracking and managing the publications 
+of a newspaper agency and its staff.
 
 ## Check it out!
 [Newspaper agency deployed to ](LINK)
