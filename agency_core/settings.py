@@ -32,7 +32,11 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "https://newspaper-agency-9sqf.onrender.com"
+]
 
 # Application definition
 
@@ -97,7 +101,7 @@ if DEVELOPMENT_MODE is True:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3")
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
