@@ -18,3 +18,7 @@ python manage.py runserver
 * Authentication for staff of the agency as Redactors
 * Keeping track of all issues 
 * Convenient management of the archive
+
+### Credentials for logging in:
+* username: prokop
+* password: asdf!qwe
