@@ -23,8 +23,8 @@ python manage.py runserver
 * username: prokop
 * password: asdf!qwe
 
-[Database scheme](newspapers-scheme.svg)
-[Screen1](screenshot1.jpg)
-[Screen2](screenshot2.jpg)
-[Screen3](screenshot3.jpg)
+![Database scheme](newspapers-scheme.svg)
+![Screen1](screenshot1.jpg)
+![Screen2](screenshot2.jpg)
+![Screen3](screenshot3.jpg)
 
