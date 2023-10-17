@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "newspaper_agency.apps.NewspaperAgencyConfig",
     "bootstrap5",
     "crispy_forms",
     "crispy_bootstrap5",
-    "newspaper_agency",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
