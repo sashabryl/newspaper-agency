@@ -13,7 +13,6 @@ import os
 import sys
 import dj_database_url
 from pathlib import Path
-from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,14 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = os.environ.get("DEBUG", default="false").lower() == "true"
 
-ALLOWED_HOSTS = [
-    "localhost", "127.0.0.1", "https://newspaper-agency-9sqf.onrender.com"
-]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ]
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -91,7 +92,9 @@ INTERNAL_IPS = [
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DEVELOPMENT_MODE = config("DEVELOPMENT_MODE", default=False, cast=bool)
+DEVELOPMENT_MODE = os.environ.get(
+    "DEVELOPMENT_MODE", default="false"
+).lower() == "true"
 
 if DEVELOPMENT_MODE is True:
     DATABASES = {
@@ -102,7 +105,7 @@ if DEVELOPMENT_MODE is True:
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     DATABASES = {
-        "default": dj_database_url.parse(config("DATABASE_URL"))
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
 
 # Password validation
