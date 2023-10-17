@@ -2,7 +2,7 @@
 An app for tracking and managing the publications 
 of a newspaper agency and its staff.
 
-## Check it out!
+## Check it out!!
 [Newspaper agency deployed to render](https://newspaper-agency-9sqf.onrender.com)
 
 ## Installation
