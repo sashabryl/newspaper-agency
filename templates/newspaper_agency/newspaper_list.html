@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+<div class="container" style="margin-top: 15vh;">
+  <form class="form-inline" action="" method="get" novalidate>
+                  <div class="input-group mb-3">
+                    <input class="btn btn-primary h-100" type="submit"
+                           value="Search">
+                    {{ search_form|crispy }}
+                  </div>
+                </form>
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4 rounded-5 border border-danger border-2">
+        <div class="card-header pb-0">
+          <h3 class="text-center">
+            {% if newspaper_list %}Newspapers ({{ num_found }} found)
+            {% else %}No publications{% endif %}
+            <a href="{% url 'agency:newspaper-create' %}" class="btn btn-outline-success">Add</a>
+
+          </h3>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center table-hover pb-0 border border-danger">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">redactors</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">content</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">topics</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">date of publication</th>
+                  <th class="text-secondary opacity-7">Edit</th>
+                  <th class="text-secondary opacity-7">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for newspaper in newspaper_list %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <a class="btn btn-outline-dark" href="{% url 'agency:newspaper-detail' newspaper.id %}">
+                          {{ newspaper.title }}
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    {% if newspaper.publishers.all.count == 1 %}
+                      <a href="{% url 'agency:redactor-detail' newspaper.publishers.first.id %}"
+                         class="btn btn-light border border-dark rounded-5">
+                        {{ newspaper.publishers.first.username }}
+                      </a>
+                    {% elif not newspaper.publishers.all %}
+                      <h6>No redactors</h6>
+                    {% else %}
+                      <div class="btn-group dropup">
+                        <div class="dropdown dropdown">
+                          <button class="btn btn-light dropdown-toggle"
+                                  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                  aria-expanded="false">
+                            Redactors
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for redactor in newspaper.publishers.all %}
+                              <li>
+                                <a class="dropdown-item dropdown-link"
+                                   href="{% url 'agency:redactor-detail' redactor.id %}">
+                                  {{ redactor.username }}
+                                </a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-outline-primary"
+                            data-bs-toggle="modal" data-bs-target="#Modal{{ newspaper.id }}">
+                      See content
+                    </button>
+                    <div class="modal fade" id="Modal{{ newspaper.id }}"
+                         tabindex="-1" aria-labelledby="ModalLabel{{ newspaper.id }}"
+                         aria-hidden="true">
+                      <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h3 class="modal-title text-center" id="ModalLabel{{ newspaper.id }}">
+                              {{ newspaper.title }}
+                            </h3>
+                            <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <p class="fs-5">
+                              {{ newspaper.content }}
+                            </p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {% if newspaper.topics.all.count == 1 %}
+                      <a href="{% url 'agency:topic-detail' newspaper.topics.first.id %}"
+                       class="btn btn-light border border-dark rounded-5">
+                        {{ newspaper.topics.first }}
+                      </a>
+                    {% elif not newspaper.topics.all %}
+                      <h6>No topics</h6>
+                    {% else %}
+                    <div class="btn-group dropup">
+                      <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle"
+                                type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                          Topics
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                          {% for topic in newspaper.topics.all %}
+                            <li>
+                              <a class="dropdown-item" href="{% url 'agency:topic-detail' topic.id %}">
+                              {{ topic }}
+                            </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-secondary text-xs font-weight-bold">
+                      {{ newspaper.published_date }}
+                    </span>
+                  </td>
+                  <td>
+                    <a href="{% url 'agency:newspaper-update' newspaper.id %}"
+                       class="btn btn-outline-secondary">
+                      Edit
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{% url 'agency:newspaper-delete' newspaper.id %}"
+                       class="btn btn-outline-danger">
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+              <tfoot class="pb-0">
+                <tr>
+                  <td class="pb-0"></td>
+                  <td class="pb-0"></td>
+                  <td class="pb-0"></td>
+                  <td class="pb-0"></td>
+                  <td class="pb-0"></td>
+                  <td class="pb-0"></td>
+                  <td class="pb-0">
+                    {% include "includes/pagination.html" %}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
