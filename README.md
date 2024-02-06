@@ -22,11 +22,3 @@ python manage.py runserver
 ### Credentials for logging in:
 * username: prokop
 * password: asdf!qwe
-  
-## Database structure
-![Database scheme](newspapers-scheme.svg)
-
-## Demo
-![Screen1](screenshot1.png)
-![Screen2](screenshot2.png)
-![Screen3](screenshot3.png)
